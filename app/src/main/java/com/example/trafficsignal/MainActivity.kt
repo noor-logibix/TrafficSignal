@@ -3,15 +3,22 @@ package com.example.trafficsignal
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
 import com.example.trafficsignal.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    lateinit var handler: Handler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        handler = Handler()
 
         binding.btnFrontStop.setOnClickListener {
             turnOnn(TrafficLight.FRONT_RED)
@@ -46,11 +53,17 @@ class MainActivity : AppCompatActivity() {
     private fun turnOnn(light: TrafficLight) {
         when (light) {
             TrafficLight.FRONT_RED -> {
-                switchFrontLight(isRedEnable = true)
+                switchFrontLight(isYellowEnable = true)
+                val duration = 2000L
+                blinkView(binding.vFrontYellow, duration)
+                Handler().postDelayed({
+                    switchFrontLight(isRedEnable = true)
+                }, duration + ((duration * 20) / 100))
             }
 
             TrafficLight.FRONT_GREEN -> {
                 switchFrontLight(isGreenEnable = true)
+                binding.vFrontYellow.visibility = View.GONE
             }
 
             TrafficLight.FRONT_YELLOW -> {
@@ -58,7 +71,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             TrafficLight.RIGHT_RED -> {
-                switchRightLight(isRedEnable = true)
+                switchRightLight(isYellowEnable = true)
+                val duration = 2000L
+                blinkView(binding.vRightYellow, duration)
+                Handler().postDelayed({
+                    switchRightLight(isRedEnable = true)
+                }, duration + ((duration * 20) / 100))
             }
 
             TrafficLight.RIGHT_GREEN -> {
@@ -99,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnRightGo.isEnabled = false
         binding.btnRightSlowDown.isEnabled = false
 
-        Handler().postDelayed({
+        handler.postDelayed({
             binding.btnFrontGo.isEnabled = true
             binding.btnFrontSlowDown.isEnabled = true
             binding.btnRightGo.isEnabled = true
@@ -107,4 +125,14 @@ class MainActivity : AppCompatActivity() {
         }, 5000L)
     }
 
+    private fun blinkView(view: View, duration: Long) {
+        val anim: Animation = AlphaAnimation(0.0f, 1.0f)
+        val repeatCount = (duration / 400).toInt()
+        val durationPerBlink = duration / repeatCount
+        anim.duration = durationPerBlink //You can manage the blinking time with this parameter
+        anim.startOffset = 5
+        anim.repeatMode = Animation.REVERSE
+        anim.repeatCount = repeatCount
+        view.startAnimation(anim)
+    }
 }
