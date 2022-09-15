@@ -8,10 +8,13 @@ import com.example.trafficsignal.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    lateinit var handler: Handler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        handler = Handler()
 
         binding.btnFrontStop.setOnClickListener {
             turnOnn(TrafficLight.FRONT_RED)
@@ -46,7 +49,20 @@ class MainActivity : AppCompatActivity() {
     private fun turnOnn(light: TrafficLight) {
         when (light) {
             TrafficLight.FRONT_RED -> {
+                    switchFrontLight(isYellowEnable = true)
+                for (i in 1..10) {
+                    handler.postDelayed({
+                        if (i%2==0) {
+                            switchFrontLight(isYellowEnable = true)
+                        }else{
+                            switchFrontLight(isYellowEnable = false)
+                        }
+                    }, 500)
+                }
                 switchFrontLight(isRedEnable = true)
+                handler.postDelayed({
+                    switchFrontLight(isRedEnable = true)
+                }, 2500)
             }
 
             TrafficLight.FRONT_GREEN -> {
@@ -59,6 +75,9 @@ class MainActivity : AppCompatActivity() {
 
             TrafficLight.RIGHT_RED -> {
                 switchRightLight(isRedEnable = true)
+                handler.postDelayed({
+                    switchRightLight(isRedEnable = true)
+                }, 2000)
             }
 
             TrafficLight.RIGHT_GREEN -> {
@@ -99,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnRightGo.isEnabled = false
         binding.btnRightSlowDown.isEnabled = false
 
-        Handler().postDelayed({
+        handler.postDelayed({
             binding.btnFrontGo.isEnabled = true
             binding.btnFrontSlowDown.isEnabled = true
             binding.btnRightGo.isEnabled = true
