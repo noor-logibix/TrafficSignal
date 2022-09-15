@@ -56,14 +56,13 @@ class MainActivity : AppCompatActivity() {
                 switchFrontLight(isYellowEnable = true)
                 val duration = 2000L
                 blinkView(binding.vFrontYellow, duration)
-                Handler().postDelayed({
+                handler.postDelayed({
                     switchFrontLight(isRedEnable = true)
                 }, duration + ((duration * 20) / 100))
             }
 
             TrafficLight.FRONT_GREEN -> {
                 switchFrontLight(isGreenEnable = true)
-                binding.vFrontYellow.visibility = View.GONE
             }
 
             TrafficLight.FRONT_YELLOW -> {
@@ -74,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 switchRightLight(isYellowEnable = true)
                 val duration = 2000L
                 blinkView(binding.vRightYellow, duration)
-                Handler().postDelayed({
+                handler.postDelayed({
                     switchRightLight(isRedEnable = true)
                 }, duration + ((duration * 20) / 100))
             }
