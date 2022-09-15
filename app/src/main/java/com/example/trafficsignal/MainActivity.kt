@@ -2,6 +2,7 @@ package com.example.trafficsignal
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.trafficsignal.databinding.ActivityMainBinding
 
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         binding.vFrontRed.setBackgroundColor(if (isRedEnable) Color.RED else Color.GRAY)
         binding.vFrontGreen.setBackgroundColor(if (isGreenEnable) Color.GREEN else Color.GRAY)
         binding.vFrontYellow.setBackgroundColor(if (isYellowEnable) Color.YELLOW else Color.GRAY)
+        disableButtons()
     }
 
     fun switchRightLight(
@@ -88,5 +90,21 @@ class MainActivity : AppCompatActivity() {
         binding.vRightRed.setBackgroundColor(if (isRedEnable) Color.RED else Color.GRAY)
         binding.vRightGreen.setBackgroundColor(if (isGreenEnable) Color.GREEN else Color.GRAY)
         binding.vRightYellow.setBackgroundColor(if (isYellowEnable) Color.YELLOW else Color.GRAY)
+        disableButtons()
     }
+
+    fun disableButtons() {
+        binding.btnFrontGo.isEnabled = false
+        binding.btnFrontSlowDown.isEnabled = false
+        binding.btnRightGo.isEnabled = false
+        binding.btnRightSlowDown.isEnabled = false
+
+        Handler().postDelayed({
+            binding.btnFrontGo.isEnabled = true
+            binding.btnFrontSlowDown.isEnabled = true
+            binding.btnRightGo.isEnabled = true
+            binding.btnRightSlowDown.isEnabled = true
+        }, 5000L)
+    }
+
 }
