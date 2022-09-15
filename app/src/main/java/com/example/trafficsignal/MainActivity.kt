@@ -107,5 +107,4 @@ class MainActivity : AppCompatActivity() {
             binding.btnRightSlowDown.isEnabled = true
         }, 5000)
     }
-
 }
